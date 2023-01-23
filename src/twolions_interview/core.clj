@@ -42,24 +42,25 @@
   (let [dx       (count board)
         dy       (count (first board))
         dim      [dx dy]
-        init-chs (map str (next word))
+        chstr    (map str word)
         ;; Initialize stack value to coord matching the first letter of word.
         init-st  (for [i     (range dx)
                        j     (range dy)
-                       :when (= (get-in board [i j]) (str (first word)))]
+                       :when (= (get-in board [i j]) (first chstr))]
                    {:coord   [i j]
-                    :chars   init-chs
+                    :chars   (next chstr)
                     :visited (set [[i j]])})]
     (loop [st (vec init-st)]
       (if (peek st)
         (let [{:keys [coord chars visited]} (peek st)]
           (if (seq chars)
-            (recur (into (pop st) (->> (neighbors dim coord)
-                                       (remove visited)
-                                       (filter #(= (get-in board %) (first chars)))
-                                       (map #(array-map :coord %
-                                                        :chars (next chars)
-                                                        :visited (conj visited %))))))
+            (recur (->> (neighbors dim coord)
+                        (remove visited)
+                        (filter #(= (get-in board %) (first chars)))
+                        (map #(array-map :coord %
+                                         :chars (next chars)
+                                         :visited (conj visited %)))
+                        (into (pop st))))
             true))
         false))))
 

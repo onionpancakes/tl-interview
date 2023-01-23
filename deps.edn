@@ -1,0 +1,7 @@
+{:paths ["src"]
+ :aliases
+ {:dev
+  {:extra-paths ["dev"]}
+
+  :run-tests
+  {:main-opts ["-m" "twolions-interview.core"]}}}
